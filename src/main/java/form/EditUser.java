@@ -1,0 +1,677 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
+ */
+package form;
+
+import DAO.UserDAO;
+import helper.Xlmage;
+import java.awt.Frame;
+import java.awt.Image;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.User;
+
+/**
+ *
+ * @author ASUS
+ */
+public class EditUser extends javax.swing.JDialog {
+
+    List<User> listUser = new ArrayList<>();
+
+    private DefaultTableModel userModel;
+    private User selectedUser;
+    int selectcurrent;
+    UserDAO userDAO;
+    boolean deleteSuccess;
+
+    // Add this field
+    /**
+     * Creates new form EditUser
+     *
+     * @param parent
+     */
+    public EditUser(Frame parent, boolean modal, User selectedUser) {
+        super(parent, modal);
+        initComponents();
+        List<User> listUser = new ArrayList<>();
+
+        this.userModel = userModel;
+        this.userDAO = new UserDAO();
+        this.selectedUser = selectedUser; // Assign the parameter to the field
+
+        if (selectedUser != null) {
+            populateFormFields(selectedUser);
+        }
+
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null && !imagePath.isEmpty()) {
+            ImageIcon userImageIcon = new ImageIcon(imagePath);
+            Image image = userImageIcon.getImage().getScaledInstance(imgUSer.getWidth(), imgUSer.getHeight(), Image.SCALE_SMOOTH);
+            imgUSer.setIcon(new ImageIcon(image));
+            imgUSer.setToolTipText(imagePath);
+        } else {
+            imgUSer.setIcon(null);
+            imgUSer.setToolTipText("");
+        }
+    }
+
+    private void populateFormFields(User selectedUser) {
+        txtName.setText(selectedUser.getName());
+        txtSDT.setText(selectedUser.getSDT());
+        txtEmail.setText(selectedUser.getEmail());
+        txtAdress.setText(selectedUser.getAdress());
+        txtAge.setText(selectedUser.getAge());
+        txtpassword.setText(selectedUser.getPassword());
+        txtWage.setText(String.valueOf(selectedUser.getWage()));
+        cbxRole.setSelectedItem(selectedUser.isRole() ? "Admin" : "Nhân viên");
+        String imagePath = selectedUser.getImg();
+        displayImage(imagePath);
+    }
+
+    private void editUser() {
+        try {
+            if (selectedUser != null) {
+                // Debugging: In thông tin trước khi cập nhật
+                System.out.println("Before update:");
+                System.out.println("selectedUser: " + selectedUser);
+                System.out.println("txtName: " + txtName.getText());
+                // Thực hiện cập nhật thông tin user
+
+                // Debugging: In thông tin sau khi cập nhật
+                System.out.println("After update:");
+                System.out.println("selectedUser: " + selectedUser);
+
+                // Cập nhật trong database
+                String roleString = (String) cbxRole.getSelectedItem();
+                boolean role = roleString.equals("Admin");
+                User updateUser = new User(selectedUser.getUserID(), txtName.getText(), role, txtAge.getText(), txtSDT.getText(), txtEmail.getText(), txtpassword.getText(), txtAdress.getText(), Float.parseFloat(txtWage.getText()), imgUSer.getToolTipText());
+                // Cập nhật thông tin user
+
+                userDAO.update(updateUser);
+                if (getParent() instanceof Mainform) {
+                    Mainform mainform = (Mainform) getParent();
+                    mainform.fillToTableUser();
+                }
+                // ... (Các dòng code còn lại giữ nguyên)
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating user");
+        }
+    }
+
+    private void removeUser() {
+        try {
+            // Assuming you have a check for null selectedUser, if not, add one
+            if (selectedUser != null) {
+                userDAO.delete(selectedUser);
+
+                // Update the table in the main form
+                if (getParent() instanceof Mainform) {
+                    Mainform mainform = (Mainform) getParent();
+                    mainform.refreshUserData();
+
+                    // Close the dialog after successful deletion
+                    this.dispose();
+
+                }
+                JOptionPane.showMessageDialog(this, "ok");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting user");
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        txtSDT = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
+        txtAdress = new javax.swing.JTextField();
+        txtAge = new javax.swing.JTextField();
+        txtpassword = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        imgUSer = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtWage = new javax.swing.JTextField();
+        btnAdd = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        cbxRole = new javax.swing.JComboBox<>();
+        btnRemove = new javax.swing.JButton();
+        btnFirst = new javax.swing.JButton();
+        btnPre = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnLast = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24))); // NOI18N
+
+        jLabel1.setText("Name ");
+
+        jLabel2.setText("SDT");
+
+        jLabel3.setText("Email");
+
+        jLabel4.setText("Adress");
+
+        jLabel5.setText("Age");
+
+        jLabel6.setText("Role");
+
+        jPanel2.setBackground(new java.awt.Color(51, 153, 255));
+
+        imgUSer.setBackground(new java.awt.Color(255, 255, 255));
+        imgUSer.setText("\\");
+            imgUSer.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    imgUSerMouseClicked(evt);
+                }
+            });
+
+            jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
+            jLabel9.setText("Hình ảnh");
+
+            javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+            jPanel2.setLayout(jPanel2Layout);
+            jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGap(86, 86, 86)
+                            .addComponent(jLabel9))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGap(24, 24, 24)
+                            .addComponent(imgUSer, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(30, Short.MAX_VALUE))
+            );
+            jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(5, 5, 5)
+                    .addComponent(jLabel9)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(imgUSer, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(36, Short.MAX_VALUE))
+            );
+
+            jLabel10.setText("Password");
+
+            jLabel11.setText("Wage");
+
+            btnAdd.setText("Add");
+            btnAdd.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnAddActionPerformed(evt);
+                }
+            });
+
+            btnEdit.setText("Edit");
+            btnEdit.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnEditActionPerformed(evt);
+                }
+            });
+
+            btnClear.setText("Clear");
+            btnClear.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnClearActionPerformed(evt);
+                }
+            });
+
+            cbxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nhân viên", "Admin" }));
+
+            btnRemove.setText("Remove");
+            btnRemove.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnRemoveActionPerformed(evt);
+                }
+            });
+
+            btnFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
+            btnFirst.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnFirstActionPerformed(evt);
+                }
+            });
+
+            btnPre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/left-arrow.png"))); // NOI18N
+            btnPre.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnPreActionPerformed(evt);
+                }
+            });
+
+            btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/left-arrow - Copy.png"))); // NOI18N
+            btnNext.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnNextActionPerformed(evt);
+                }
+            });
+
+            btnLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back - Copy.png"))); // NOI18N
+            btnLast.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnLastActionPerformed(evt);
+                }
+            });
+
+            javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(27, 27, 27)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtAdress, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(txtAge, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(txtpassword, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(txtName)
+                                .addComponent(txtSDT, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(txtWage, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                                .addComponent(cbxRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnAdd)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnEdit)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnClear)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnRemove)))
+                    .addGap(37, 37, 37)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnFirst)
+                            .addGap(26, 26, 26)
+                            .addComponent(btnPre)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnNext)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnLast)
+                            .addGap(79, 79, 79))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(70, Short.MAX_VALUE))))
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(37, 37, 37)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnLast)
+                                .addComponent(btnFirst)
+                                .addComponent(btnPre)
+                                .addComponent(btnNext))
+                            .addContainerGap(105, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(txtAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5)
+                                .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(21, 21, 21)
+                            .addComponent(jLabel7)
+                            .addGap(3, 3, 3)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbxRole, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtWage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11))
+                            .addGap(64, 64, 64)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnAdd)
+                                .addComponent(btnEdit)
+                                .addComponent(btnClear)
+                                .addComponent(btnRemove))
+                            .addGap(54, 54, 54))))
+            );
+
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+            getContentPane().setLayout(layout);
+            layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+            layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+
+            pack();
+        }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+
+        try {
+            String roleString = (String) cbxRole.getSelectedItem();
+            boolean role = roleString.equals("Admin");
+            String imagePath = imgUSer.getToolTipText();
+            User newUser = new User(txtName.getText(), role, txtAge.getText(), txtSDT.getText(),
+                    txtEmail.getText(), txtpassword.getText(), txtAdress.getText(),
+                    Float.parseFloat(txtWage.getText()), imagePath);
+
+            userDAO.insert(newUser);
+            JOptionPane.showMessageDialog(this, "Add success");
+
+            // Update the table in the main form
+            if (getParent() instanceof Mainform) {
+                Mainform mainform = (Mainform) getParent();
+                mainform.fillToTableUser();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void imgUSerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgUSerMouseClicked
+        JFileChooser jfile = new JFileChooser();
+        int returnValue = jfile.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = jfile.getSelectedFile();
+                String imagePath = file.getAbsolutePath();
+                Xlmage.save(file);
+                displayImage(imagePath);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        System.out.println(selectedUser);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgUSerMouseClicked
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        txtName.setText("");
+        txtSDT.setText("");
+        txtEmail.setText("");
+        txtAdress.setText("");
+        txtAge.setText("");
+        txtpassword.setText("");
+        txtWage.setText("");
+        cbxRole.setSelectedIndex(0); // Assuming you want to reset the combo box to the first item
+        imgUSer.setIcon(null); // Assuming you want to clear the image icon
+        imgUSer.setToolTipText("");       // TODO add your handling code here:
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        editUser();
+
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        removeUser();        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+
+        try {
+            // Gọi phương thức để tải dữ liệu
+            List<User> userList = userDAO.selectAll();
+
+            // Kiểm tra dữ liệu
+            if (userList.isEmpty()) {
+                System.out.println("Không có dữ liệu người dùng trong danh sách.");
+                // Hiển thị thông báo hoặc thực hiện hành động phù hợp
+            } else {
+                // Nếu có dữ liệu, thêm từng người dùng vào danh sách listUser
+                listUser.addAll(userList);
+
+                // Hiển thị thông tin của người dùng đầu tiên
+                selectcurrent = 0;
+                populateFormFields(listUser.get(selectcurrent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu người dùng.");
+        }
+
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreActionPerformed
+        try {
+            // Gọi phương thức để tải dữ liệu
+            List<User> userList = userDAO.selectAll();
+
+            // Kiểm tra dữ liệu
+            if (userList.isEmpty()) {
+                System.out.println("Không có dữ liệu người dùng trong danh sách.");
+                // Hiển thị thông báo hoặc thực hiện hành động phù hợp
+            } else {
+                // Nếu có dữ liệu, thêm từng người dùng vào danh sách listUser
+                listUser.addAll(userList);
+                // Giảm giá trị của selectcurrent để di chuyển đến người dùng trước đó
+                selectcurrent--;
+
+                // Kiểm tra giá trị của selectcurrent để đảm bảo nó không vượt quá biên dưới
+                if (selectcurrent < 0) {
+                    selectcurrent = listUser.size() - 1;
+                }
+
+                // Hiển thị thông tin của người dùng tương ứng
+                populateFormFields(listUser.get(selectcurrent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu người dùng.");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPreActionPerformed
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        try {
+            // Gọi phương thức để tải dữ liệu
+            List<User> userList = userDAO.selectAll();
+
+            // Kiểm tra dữ liệu
+            if (userList.isEmpty()) {
+                System.out.println("Không có dữ liệu người dùng trong danh sách.");
+                // Hiển thị thông báo hoặc thực hiện hành động phù hợp
+            } else {
+                // Nếu có dữ liệu, thêm từng người dùng vào danh sách listUser
+                listUser.addAll(userList);
+                // Giảm giá trị của selectcurrent để di chuyển đến người dùng trước đó
+
+                selectcurrent = listUser.size() - 1;
+                // Kiểm tra giá trị của selectcurrent để đảm bảo nó không vượt quá biên dưới
+
+                // Hiển thị thông tin của người dùng tương ứng
+                populateFormFields(listUser.get(selectcurrent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu người dùng.");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        try {
+            // Gọi phương thức để tải dữ liệu
+            List<User> userList = userDAO.selectAll();
+
+            // Kiểm tra dữ liệu
+            if (userList.isEmpty()) {
+                System.out.println("Không có dữ liệu người dùng trong danh sách.");
+                // Hiển thị thông báo hoặc thực hiện hành động phù hợp
+            } else {
+                // Nếu có dữ liệu, thêm từng người dùng vào danh sách listUser
+                listUser.addAll(userList);
+                // Giảm giá trị của selectcurrent để di chuyển đến người dùng trước đó
+
+                selectcurrent++;
+                if (selectcurrent > listUser.size() - 1) {
+                    selectcurrent = 0;
+                }
+                // Kiểm tra giá trị của selectcurrent để đảm bảo nó không vượt quá biên dưới
+
+                // Hiển thị thông tin của người dùng tương ứng
+                populateFormFields(listUser.get(selectcurrent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu người dùng.");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+
+                User selectedUser = null;
+                EditUser dialog = new EditUser(new javax.swing.JFrame(), true, selectedUser);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPre;
+    private javax.swing.JButton btnRemove;
+    private javax.swing.JComboBox<String> cbxRole;
+    private javax.swing.JLabel imgUSer;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField txtAdress;
+    private javax.swing.JTextField txtAge;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtSDT;
+    private javax.swing.JTextField txtWage;
+    private javax.swing.JTextField txtpassword;
+    // End of variables declaration//GEN-END:variables
+
+}
